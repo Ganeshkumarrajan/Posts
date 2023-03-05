@@ -1,6 +1,10 @@
 package com.anonymous.posts.presentation
 
-import com.anonymous.posts.data.*
+import com.anonymous.posts.data.NetworkToDomainMapper
+import com.anonymous.posts.data.PostMapperNetworkToDomain
+import com.anonymous.posts.data.PostNetwork
+import com.anonymous.posts.data.PostRepositoryImpl
+import com.anonymous.posts.data.PostService
 import com.anonymous.posts.domain.PostDomain
 import com.anonymous.posts.domain.PostRepository
 import dagger.Module
