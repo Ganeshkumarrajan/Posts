@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Posts</string>
+    <string name="enter_user_id">Enter User ID</string>
+    <string name="login">Login</string>
 </resources>

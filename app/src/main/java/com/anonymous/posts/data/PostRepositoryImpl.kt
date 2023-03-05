@@ -19,11 +19,47 @@ class PostRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) : PostRepository {
 
-    override suspend fun getPosts(userId: String): Flow<NetworkResult<List<PostDomain>>> = flow {
-        emit(convertToNetworkResult(postService.getPosts(userId), mapper = postMapper))
-    }.flowOn(dispatcher)
-}
+    private val favoritePosts = mutableListOf<PostDomain>()
+    private var posts: NetworkResult<List<PostDomain>>? = null
 
+    override suspend fun getPosts(userId: String): Flow<NetworkResult<List<PostDomain>>> = flow {
+        posts?.let {
+            if (posts is NetworkResult.Success) {
+                emit(it)
+            } else {
+                emit(getItemFromNet(userId))
+            }
+        } ?: kotlin.run {
+            emit(getItemFromNet(userId))
+        }
+
+    }.flowOn(dispatcher)
+
+    override suspend fun doFavorite(item: PostDomain) {
+        favoritePosts.add(item)
+    }
+
+    override suspend fun unFavorite(item: PostDomain) {
+        favoritePosts.remove(item)
+    }
+
+    override suspend fun getFavoritePosts(): Flow<List<PostDomain>> =
+        flow {
+            emit(favoritePosts)
+        }.flowOn(dispatcher)
+
+    private suspend fun getItemFromNet(userId: String): NetworkResult<List<PostDomain>> {
+
+        val item = convertToNetworkResult(postService.getPosts(userId), mapper = postMapper)
+
+        if (item is NetworkResult.Success) {
+            posts = item
+        }
+
+        return item
+    }
+
+}
 
 private fun <I, O> convertToNetworkResult(
     data: ApiResponse<I>,
@@ -46,7 +82,8 @@ interface NetworkToDomainMapper<I, O> {
     fun mapTo(input: I): O
 }
 
-class PostMapperNetworkToDomain @Inject constructor() : NetworkToDomainMapper<PostNetwork?, List<PostDomain>> {
+class PostMapperNetworkToDomain @Inject constructor() :
+    NetworkToDomainMapper<PostNetwork?, List<PostDomain>> {
     override fun mapTo(input: PostNetwork?): List<PostDomain> =
         input?.let {
             it.map { item ->
