@@ -1,4 +1,4 @@
-package com.anonymous.posts.presentation.posts
+package com.anonymous.posts.presentation.favoritePosts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,11 @@ import com.anonymous.posts.ui.theme.component.items.PostItem
 import com.anonymous.posts.ui.theme.component.items.properties.PostUI
 
 @Composable
-fun AllPostsScreen(viewModel: PostViewModel = hiltViewModel(), postID: String, navController: NavController) {
+fun FavoritePostsScreen(
+    viewModel: FavoritePostViewModel =
+        hiltViewModel(),
+    navController: NavController
+) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -30,31 +34,28 @@ fun AllPostsScreen(viewModel: PostViewModel = hiltViewModel(), postID: String, n
         OnPostReceived(viewModel, navController)
     }
 
-    viewModel.onUiEvent(PostListUiEvent.GetPost(userId = postID))
+    viewModel.getPosts()
 }
 
 @Composable
-private fun OnPostReceived(viewModel: PostViewModel, navController: NavController) {
+fun OnPostReceived(viewModel: FavoritePostViewModel, navController: NavController) {
     when (val result = viewModel.posts.collectAsState().value) {
         is UIState.Success -> {
-            OnSuccess(data = result.data, viewModel, navController)
+            OnSuccess(data = result.data, navController)
         }
-        is UIState.Error -> {}
         else -> {}
     }
 }
 
 @Composable
-private fun OnSuccess(data: List<PostUI>, viewModel: PostViewModel, navController: NavController) {
+private fun OnSuccess(data: List<PostUI>, navController: NavController) {
     LazyColumn() {
         items(data) { post ->
             Column(Modifier.padding(10.dp)) {
-                PostItem(properties = post, onclick = {
-                    if (it.isFavorite) viewModel.onUiEvent(PostListUiEvent.DoFavorite(it.id))
-                    else viewModel.onUiEvent(PostListUiEvent.DoUnFavorite(it.id))
-                }, onItemClicked = { postId ->
-                        navController.navigate("${ScreenNames.PostDetails.route}/$postId")
-                    })
+                PostItem(properties = post, {
+                }, { postId ->
+                    navController.navigate("${ScreenNames.PostDetails.route}/$postId")
+                })
             }
         }
     }

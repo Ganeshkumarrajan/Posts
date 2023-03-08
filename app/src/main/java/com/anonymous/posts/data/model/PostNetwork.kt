@@ -1,4 +1,4 @@
-package com.anonymous.posts.data
+package com.anonymous.posts.data.model
 
 class PostNetwork : ArrayList<PostNetworkItem>()
 
