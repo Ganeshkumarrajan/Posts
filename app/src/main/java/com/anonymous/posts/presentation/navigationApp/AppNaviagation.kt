@@ -1,15 +1,15 @@
 package com.anonymous.posts.presentation.navigationApp
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.anonymous.posts.presentation.login.LoginScreen
+import com.anonymous.posts.presentation.postDetails.PostDetailsScreen
 import com.anonymous.posts.presentation.posts.PostsScreen
 
 @Composable
-fun NavigationApp(navController: NavHostController, context: Context) {
+fun NavigationApp(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = ScreenNames.Login.route
@@ -19,7 +19,13 @@ fun NavigationApp(navController: NavHostController, context: Context) {
         }
         composable(route = "${ScreenNames.Posts.route}/{postId}") { backStackEntry ->
             val postId = backStackEntry.arguments?.getString("postId") ?: ""
-            PostsScreen(postId)
+            PostsScreen(postId, navController)
+        }
+
+        composable(route = "${ScreenNames.PostDetails.route}/{postId}") { backStackEntry ->
+            val postId = backStackEntry.arguments?.getString("postId") ?: "0"
+            print(postId)
+            PostDetailsScreen(postId.toInt())
         }
     }
 }

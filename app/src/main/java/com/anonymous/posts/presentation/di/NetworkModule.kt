@@ -1,7 +1,7 @@
-package com.anonymous.posts.presentation
+package com.anonymous.posts.presentation.di
 
 import com.anonymous.posts.BuildConfig
-import com.anonymous.posts.data.PostService
+import com.anonymous.posts.data.service.PostService
 import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides

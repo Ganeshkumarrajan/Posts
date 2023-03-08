@@ -2,4 +2,6 @@
     <string name="app_name">Posts</string>
     <string name="enter_user_id">Enter User ID</string>
     <string name="login">Login</string>
+    <string name="all">All</string>
+    <string name="favorite">Favorite</string>
 </resources>
