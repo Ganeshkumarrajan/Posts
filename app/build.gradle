@@ -83,5 +83,10 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:0.13.0"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.13.0"
 
-
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1") {
+        // https://github.com/Kotlin/kotlinx.coroutines/tree/master/kotlinx-coroutines-debug#debug-agent-and-android
+        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+    }
+    testImplementation "io.mockk:mockk:1.12.4"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 }
